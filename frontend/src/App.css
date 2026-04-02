@@ -1,0 +1,180 @@
+:root {
+    --bg-dark: #0d1117;
+    --panel-dark: #161b22;
+    --accent-red: #e05252;
+    --text-main: #f0f6fc;
+    --text-sub: #8b949e;
+    --border: #30363d;
+    --success: #2ea043;
+  }
+  
+  body {
+    margin: 0;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Cairo', sans-serif;
+  }
+  
+  .virela-app {
+    display: flex;
+    height: 100vh;
+    direction: rtl;
+  }
+  
+  /* SIDEBAR */
+  .sidebar {
+    width: 320px;
+    background-color: var(--panel-dark);
+    border-left: 1px solid var(--border);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .logo-area {
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .logo-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--accent-red);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-red);
+  }
+  
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: 0.3s;
+  }
+  
+  .upload-zone:hover { border-color: var(--accent-red); }
+  
+  .ekg-line {
+    width: 100%;
+    height: 40px;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/EKG_Normal_Sinus_Rhythm.svg') repeat-x;
+    background-size: contain;
+    filter: invert(44%) sepia(87%) saturate(2337%) hue-rotate(330deg) brightness(95%) contrast(89%);
+    opacity: 0.3;
+  }
+  
+  .ekg-line.active { animation: move-ekg 2s linear infinite; opacity: 0.8; }
+  
+  @keyframes move-ekg { from { background-position: 0 0; } to { background-position: 400px 0; } }
+  
+  /* CHAT */
+  .chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-image: radial-gradient(circle at center, #1c2128 0%, #0d1117 100%);
+  }
+  
+  .chat-history {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .message {
+    max-width: 80%;
+    padding: 16px 20px;
+    border-radius: 12px;
+  }
+  
+  .user-msg {
+    align-self: flex-start;
+    background: #21262d;
+    border-right: 4px solid var(--text-sub);
+  }
+  
+  .ai-msg {
+    align-self: flex-end;
+    background: #1c2128;
+    border-right: 4px solid var(--accent-red);
+    font-family: 'Amiri', serif;
+  }
+  
+  .sources-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    overflow-x: auto;
+  }
+  
+  .source-card {
+    min-width: 180px;
+    background: #0d1117;
+    border: 1px solid var(--border);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+  
+  .page-tag {
+    background: var(--accent-red);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+  }
+  
+  .input-area {
+    padding: 30px 40px;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .input-area input {
+    flex: 1;
+    background: var(--panel-dark);
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    padding: 12px 24px;
+    color: white;
+    outline: none;
+  }
+  
+  .send-btn {
+    background: var(--accent-red);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+  }
+
+  .send-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .upload-status {
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+
+  .upload-status.ready {
+    color: var(--success);
+  }
+
+  .upload-status.waiting {
+    color: var(--text-sub);
+  }
+
+  .thinking-msg .msg-text {
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+  }

@@ -1,0 +1,123 @@
+import os
+import requests
+from dotenv import load_dotenv
+from typing import List, Dict
+import re
+
+# Load environment variables
+load_dotenv()
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+MODEL_NAME = os.getenv("MODEL_NAME")
+
+
+def _clean_llm_output(text: str) -> str:
+    # Only remove characters that are genuinely non-Arabic/non-Latin garbage
+    # (e.g. CJK, emoji, box-drawing) — keep all Arabic blocks, Latin, digits, punctuation
+    text = re.sub(r'[\u4E00-\u9FFF\u3000-\u303F\u2E80-\u2EFF\U0001F000-\U0001FFFF\u2500-\u257F]', '', text)
+    text = re.sub(r'[ \t]{2,}', ' ', text)
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
+
+# -------------------------------
+# 1. Build RAG prompt
+# -------------------------------
+def build_prompt(query: str, context_chunks: List[Dict]) -> str:
+    """
+    Build prompt with retrieved context
+    """
+
+    context_text = "\n\n".join([
+        f"(Page {chunk['page']}) {chunk['text']}"
+        for chunk in context_chunks
+    ])
+
+    prompt = f"""أنت طبيب قلب تونسي. تجاوب دايما بالدارجة التونسية العامية فقط.
+
+قواعد صارمة:
+1. الدارجة التونسية فقط — ممنوع العربية الفصحى تماماً.
+   - بدل "يجب" قول "لازم"
+   - بدل "يُعتبر" قول "يتحسب"  
+   - بدل "يُصنف" قول "نصنفوه"
+   - بدل "ينبغي" قول "خاص"
+   - بدل "أنا هنا لمساعدتك" — ما تقولهاش خالص
+2. تستعمل بس المعلومات اللي في السياق — ما تختلقش.
+3. إذا ما لقيتش جواب في السياق: "ما عنديش معلومات كافية في الوثيقة."
+4. في الآخر دايما: "هذي للتثقيف — راجع طبيبك."
+5. ممنوع أي حرف غير عربي أو لاتيني في الجواب.
+6. اختصر الإجابة (3 إلى 5 أسطر فقط)
+7. ما تعاودش النص كما هو، فسّر و لخص
+
+---------------------
+CONTEXT:
+{context_text}
+---------------------
+
+QUESTION:
+{query}
+
+ANSWER:
+"""
+
+    return prompt.strip()
+
+
+# -------------------------------
+# 2. Call OpenRouter API
+# -------------------------------
+def call_openrouter(prompt: str) -> str:
+    """
+    Send request to OpenRouter API
+    """
+
+    url = "https://openrouter.ai/api/v1/chat/completions"
+
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "model": MODEL_NAME,
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are a helpful cardiologist assistant."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        "temperature": 0.4  # low = more factual
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+
+    if response.status_code != 200:
+        raise Exception(f"OpenRouter API error: {response.text}")
+
+    result = response.json()
+
+    response = result["choices"][0]["message"]["content"]
+    if response is None:
+        return "ما قدرتش نوصل للخادم. حاول مرة أخرى بعد شوية."
+    response = _clean_llm_output(response)
+
+    return response
+
+
+# -------------------------------
+# 3. Generate response (main RAG)
+# -------------------------------
+def generate_response(query: str, context_chunks: List[Dict]) -> str:
+    """
+    Full RAG pipeline step:
+    context → prompt → LLM → answer
+    """
+
+    prompt = build_prompt(query, context_chunks)
+
+    answer = call_openrouter(prompt)
+
+    return answer
