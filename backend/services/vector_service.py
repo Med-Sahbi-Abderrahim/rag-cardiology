@@ -30,7 +30,7 @@ def load_index() -> Tuple[Optional[faiss.Index], Optional[List[Dict]]]:
 # -------------------------------
 # 1. Load embedding model (global)
 # -------------------------------
-model = SentenceTransformer("intfloat/multilingual-e5-base")
+model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
 
 
 # -------------------------------
