@@ -53,16 +53,6 @@ const ChatInterface = ({ pdfId }) => {
         {messages.map((msg, i) => (
           <div key={i} className={`message ${msg.role}-msg`}>
             <div className="msg-text">{msg.content}</div>
-            {msg.sources && (
-              <div className="sources-row">
-                {msg.sources.map((src, j) => (
-                  <div key={j} className="source-card">
-                    <span className="page-tag">ص : {src.page}</span>
-                    <p className="source-snippet">{src.text.substring(0, 80)}...</p>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         ))}
         {isThinking && (
