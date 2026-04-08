@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ChatInterface = ({ pdfId }) => {
   const [messages, setMessages] = useState([]);
@@ -8,16 +9,20 @@ const ChatInterface = ({ pdfId }) => {
   const handleSendMessage = async () => {
     if (!input || !pdfId || isThinking) return;
 
+    const history = messages.slice(-4).map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }));
     const userMsg = { role: 'user', content: input };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsThinking(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/ask', {
+      const response = await fetch(`${API_URL}/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: input, pdf_id: pdfId }),
+        body: JSON.stringify({ question: input, pdf_id: pdfId, history }),
       });
       const data = await response.json();
 
@@ -62,9 +67,9 @@ const ChatInterface = ({ pdfId }) => {
         ))}
         {isThinking && (
           <div className="message ai-msg thinking-msg">
-            <div className="msg-text">...يفكّر</div>
+              <div className="msg-text">🔄 يعيد صياغة السؤال ويبحث...</div>
           </div>
-        )}
+      )}
       </div>
 
       <div className="input-area">
@@ -76,8 +81,14 @@ const ChatInterface = ({ pdfId }) => {
           disabled={!pdfId || isThinking}
         />
         <button className="send-btn" onClick={handleSendMessage} disabled={!pdfId || isThinking}>
-          {isThinking ? '...' : '←'}
-        </button>
+          {isThinking ? (
+              <span className="btn-dots">
+                  <span className="btn-dot"></span>
+                  <span className="btn-dot"></span>
+                  <span className="btn-dot"></span>
+              </span>
+          ) : '←'}
+      </button>
       </div>
     </div>
   );

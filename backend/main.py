@@ -4,8 +4,9 @@ import json
 from pydantic import BaseModel
 
 from services.pdf_service import extract_pdf_text, chunk_medical_text
-from services.vector_service import create_faiss_index, search_context
-from services.llm_service import generate_response
+from services.vector_service import create_faiss_index, search_context, save_index, load_index
+from services.llm_service import generate_response, rewrite_query
+from typing import List, Optional, Dict
 
 
 app = FastAPI()
@@ -27,10 +28,23 @@ app.add_middleware(
 faiss_index = None
 chunks_store = None
 
+@app.on_event("startup")
+async def startup_event():
+    global faiss_index, chunks_store
+    faiss_index, chunks_store = load_index()
+    if faiss_index is None or chunks_store is None:
+        print("No existing index found — waiting for PDF upload")
+    else:
+        print("FAISS index and chunks store loaded successfully")
+
+class Message(BaseModel):
+    role: str
+    content: str
 
 class AskRequest(BaseModel):
     pdf_id: str
     question: str
+    history: Optional[List[Dict]] = None
 
 
 def normalize_query_input(raw_query: str) -> str:
@@ -65,6 +79,10 @@ def normalize_query_input(raw_query: str) -> str:
 def health():
     return {"status": "ok"}
 
+@app.get("/status")
+def status():
+    return {"has_index": faiss_index is not None and faiss_index.ntotal > 0}
+
 
 # -------------------------------
 # 2. Upload PDF
@@ -84,6 +102,7 @@ async def upload_pdf(file: UploadFile = File(...)):
 
         # Create FAISS index
         faiss_index, chunks_store = create_faiss_index(chunks)
+        save_index(faiss_index, chunks_store)
     except ValueError as exc:
         # Extraction/chunking-level validation errors
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -119,12 +138,17 @@ async def ask_question(payload: AskRequest):
 
     # 3. Normalize only for retrieval
     query = normalize_query_input(question)
-
-    # 4. Retrieve relevant context + sources
-    context, sources = search_context(query, faiss_index, chunks_store)
+    try :
+        queries = rewrite_query(query)
+        if not queries:
+            queries = [query]
+    except Exception:
+        queries = [query]
+        
+    context, sources = search_context(queries, faiss_index, chunks_store or [])
 
     # 5. Generate answer using ORIGINAL question
-    answer = generate_response(question, context)
+    answer = generate_response(question, context, payload.history)
 
     # 6. Return structured response
     return {

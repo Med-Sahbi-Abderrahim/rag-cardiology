@@ -19,18 +19,22 @@
     display: flex;
     height: 100vh;
     direction: rtl;
+    width: 100%;
+    overflow: hidden;
   }
   
   /* SIDEBAR */
   .sidebar {
     width: 320px;
+    box-sizing: border-box;
+    flex-shrink: 0;
     background-color: var(--panel-dark);
     border-left: 1px solid var(--border);
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 30px;
-  }
+}
   
   .logo-area {
     font-size: 22px;
@@ -76,8 +80,10 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    min-width: 0;
     background-image: radial-gradient(circle at center, #1c2128 0%, #0d1117 100%);
-  }
+}
   
   .chat-history {
     flex: 1;
@@ -86,6 +92,7 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+    min-height: 0;
   }
   
   .message {
@@ -177,4 +184,40 @@
   .thinking-msg .msg-text {
     opacity: 0.85;
     letter-spacing: 0.5px;
+    animation: pulse 1.5s ease-in-out infinite;
   }
+  
+  @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+  }
+  .btn-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+
+.btn-dot {
+    width: 5px;
+    height: 5px;
+    background: white;
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+}
+
+.btn-dot:nth-child(2) { animation-delay: 0.2s; }
+.btn-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+.chat-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+}

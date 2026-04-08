@@ -7,7 +7,7 @@ __pycache__/
 node_modules/
 
 # Env
-.env
+**/.env
 
 # Data / models
 *.pdf
@@ -16,3 +16,5 @@ node_modules/
 
 # Logs
 *.log
+
+**/storage/

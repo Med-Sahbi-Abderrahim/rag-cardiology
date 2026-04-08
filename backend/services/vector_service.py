@@ -1,8 +1,31 @@
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
+import os
+import json
+from pathlib import Path
 
+
+STORAGE_DIR = Path(os.getenv("STORAGE_DIR", "storage"))
+INDEX_PATH  = STORAGE_DIR / "index.faiss"
+CHUNKS_PATH = STORAGE_DIR / "chunks.json"
+
+STORAGE_DIR.mkdir(parents=True, exist_ok=True)
+
+def save_index(index: faiss.Index, chunks: List[Dict]):
+    faiss.write_index(index, str(INDEX_PATH))
+    with open(CHUNKS_PATH, "w", encoding="utf-8") as f:
+        json.dump(chunks, f, ensure_ascii=False)
+
+def load_index() -> Tuple[Optional[faiss.Index], Optional[List[Dict]]]:
+    if INDEX_PATH.exists() and CHUNKS_PATH.exists():
+        index = faiss.read_index(str(INDEX_PATH))
+        with open(CHUNKS_PATH, "r", encoding="utf-8") as f:
+            chunks = json.load(f)
+    else:
+        return (None, None)
+    return index, chunks
 
 # -------------------------------
 # 1. Load embedding model (global)
@@ -63,42 +86,35 @@ def expand_query(query: str) -> str:
 # -------------------------------
 # 4. Search context
 # -------------------------------
-def search_context(query: str, index, chunks: List[Dict], k: int = 3) -> Tuple[List[Dict], List[Dict]]:
+def search_context(queries: List[str], index, chunks: List[Dict], k: int = 3) -> Tuple[List[Dict], List[Dict]]:
     """
-    Retrieve top-k relevant chunks using cosine similarity
-    """
-    """
-    # Expand query
-    expanded_query = expand_query(query)
+    Retrieve top-k relevant chunks using cosine similarity across multiple queries.
     """
 
     if index is None or index.ntotal == 0:
         return [], []
 
-    # Embed query
-    query_vector = model.encode([query])
-    query_vector = np.array(query_vector).astype("float32")
+    SIMILARITY_THRESHOLD = 0.3
+    merged_results = {}
 
-    # Normalize query vector
-    faiss.normalize_L2(query_vector)
+    for query in queries:
+        query_vector = model.encode([query])
+        query_vector = np.array(query_vector).astype("float32")
+        faiss.normalize_L2(query_vector)
 
-    # Search
-    scores, indices = index.search(query_vector, k)
+        scores, indices = index.search(query_vector, k)
 
-    SIMILARITY_THRESHOLD = 0.3  # tune this: raise if too much noise, lower if missing answers
+        for idx, score in zip(indices[0], scores[0]):
+            if idx == -1:
+                continue
+            if score < SIMILARITY_THRESHOLD:
+                continue
+            if idx not in merged_results or score > merged_results[idx]:
+                merged_results[idx] = score
 
-    results = []
-    for idx, score in zip(indices[0], scores[0]):
-        if idx == -1:
-            continue
-        if score < SIMILARITY_THRESHOLD:  # skip low-relevance chunks
-            continue
-        results.append({
-            "text": chunks[idx]["text"],
-            "page": chunks[idx]["page"],
-            "score": float(score)
-        })
+    final = sorted(merged_results.items(), key=lambda x: x[1], reverse=True)
 
-    # Keep full results for prompt building, and lightweight sources for UI.
-    sources = [{"text": item["text"], "page": item["page"]} for item in results]
+    results = [{"text": chunks[idx]["text"], "page": chunks[idx]["page"], "score": score} for idx, score in final]
+    sources = [{"text": chunks[idx]["text"], "page": chunks[idx]["page"]} for idx, score in final]
+
     return results, sources
