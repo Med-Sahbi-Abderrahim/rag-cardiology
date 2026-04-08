@@ -18,3 +18,6 @@ pdfplumber==0.11.4
 
 # HTTP
 requests==2.32.3
+
+# Required by FastAPI for file upload (UploadFile / Form)
+python-multipart==0.0.9
