@@ -57,7 +57,7 @@ const ChatInterface = ({ pdfId }) => {
         ))}
         {isThinking && (
           <div className="message ai-msg thinking-msg">
-              <div className="msg-text">🔄 يعيد صياغة السؤال ويبحث...</div>
+              <div className="msg-text">جارالبحث..</div>
           </div>
       )}
       </div>
