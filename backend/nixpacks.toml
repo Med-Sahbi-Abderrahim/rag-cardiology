@@ -11,7 +11,7 @@ cmds = [
 cmds = [
   # Pre-download the sentence-transformers model so it's baked into the image
   # and not re-downloaded on every cold start.
-  ". /opt/venv/bin/activate && python -c \"from sentence_transformers import SentenceTransformer; SentenceTransformer('intfloat/multilingual-e5-base')\""
+  ". /opt/venv/bin/activate && python -c \"from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')\""
 ]
 
 [start]
