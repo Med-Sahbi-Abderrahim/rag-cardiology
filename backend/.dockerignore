@@ -1,0 +1,26 @@
+# local envs
+.venv
+venv
+env
+
+# python cache/build
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# vcs/editor noise
+.git
+.gitignore
+.vscode
+.idea
+
+# logs/temp
+*.log
+tmp/
+temp/
+
+# dotenv local secrets
+.env
