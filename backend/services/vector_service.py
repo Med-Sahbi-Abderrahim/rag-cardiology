@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 
-STORAGE_DIR = Path(os.getenv("STORAGE_DIR", "storage"))
+STORAGE_DIR = Path(os.getenv("RAG_STORAGE_PATH", "storage"))
 INDEX_PATH  = STORAGE_DIR / "index.faiss"
 CHUNKS_PATH = STORAGE_DIR / "chunks.json"
 
