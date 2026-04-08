@@ -1,14 +1,20 @@
-fastapi==0.135.2
-uvicorn==0.42.0
+fastapi==0.115.6
+uvicorn[standard]==0.32.0
 python-dotenv==1.0.0
-pydantic==2.12.5
-starlette==1.0.0
-sentence-transformers==5.3.0
-transformers==5.3.0
-torch==2.2.2
-faiss-cpu==1.13.2
-numpy==2.4.3
-scikit-learn==1.8.0
-scipy==1.17.1
-pdfplumber==0.11.9
-PyPDF2==3.0.1
+pydantic==2.10.3
+starlette==0.41.3
+
+# Embeddings — CPU-only PyTorch (avoids the ~2 GB CUDA wheel)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2+cpu
+sentence-transformers==2.7.0
+
+# Vector store
+faiss-cpu==1.8.0
+numpy==1.26.4
+
+# PDF parsing — pdfplumber covers everything PyPDF2 did, no need for both
+pdfplumber==0.11.4
+
+# HTTP
+requests==2.32.3
