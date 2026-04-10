@@ -93,41 +93,24 @@ def build_prompt(query: str, context_chunks: List[Dict], history: Optional[List[
 # 2. Call OpenRouter API
 # -------------------------------
 def call_openrouter(prompt: str) -> str:
-    url = "https://openrouter.ai/api/v1/chat/completions"
-
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
-    }
-
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={os.getenv('GEMINI_API_KEY')}"
+    
     data = {
-        "model": MODEL_NAME,
-        "messages": [
-            {
-                "role": "system",
-                "content": "You are a helpful cardiologist assistant."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        "temperature": 0.4
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.4}
     }
 
     try:
-        response = requests.post(url, headers=headers, json=data, timeout=60)
+        response = requests.post(url, json=data, timeout=60)
         if response.status_code != 200:
-            raise Exception(f"OpenRouter API error: {response.text}")
+            raise Exception(f"Gemini API error: {response.text}")
         result = response.json()
-        content = result["choices"][0]["message"]["content"]
-        if content is None:
-            return "ما قدرتش نوصل للخادم. حاول مرة أخرى بعد شوية."
+        content = result["candidates"][0]["content"]["parts"][0]["text"]
         return _clean_llm_output(content)
     except requests.exceptions.Timeout:
         return "الخادم ما جاوبش في الوقت المحدد. حاول مرة أخرى."
     except Exception as e:
-        print(f"OpenRouter error: {e}")
+        print(f"Gemini error: {e}")
         return "ما قدرتش نوصل للخادم. حاول مرة أخرى بعد شوية."
 
 

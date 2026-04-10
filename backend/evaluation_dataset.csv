@@ -1,0 +1,21 @@
+question_darija,formal_arabic_expected_queries,expected_topic,expected_keywords_in_answer,retrieval_should_succeed,notes
+كيفاش نحط المريض باش نفحص قلبو؟,وضعية المريض لفحص القلب| زاوية الفحص,patient_positioning,45 درجة| أريكة| صدر| كشف,TRUE,basic exam setup
+شنوا المناطق الأربعة اللي نتسمع فيهم القلب؟,مناطق تسمع القلب| الباحات الأربعة,auscultation_areas,أبهرية| رئوية| ثالثية| تاجية,TRUE,four auscultation areas
+شنوا الفرق بين S1 و S2؟,أصوات القلب الأول والثاني| إغلاق الصمامات,heart_sounds,انقباض| انبساط| إغلاق| صمام,TRUE,core heart sounds question
+علاش نلمس النبض الشعاعي وقت فحص القلب؟,تقييم النبض الشعاعي| معدل النبض ونظامه,radial_pulse,منتظم| غير منتظم| معدل| وتيرة,TRUE,pulse assessment
+شنوا معنى النبض بطيء الارتفاع؟,النبض بطيء الارتفاع| تضيق الصمام الأبهري,pulse_character,تضيق| أبهر| صمام| بطيء,TRUE,pulse character sign
+شنوا نحوسو فيه في أظافر المريض وقت فحص القلب؟,علامات الأظافر في أمراض القلب| تعجر الأصابع,nail_signs,تدخين| تعجر| نزيف| شعيرات,TRUE,peripheral signs inspection
+كيفاش نقيّم الضغط الوريدي الوداجي؟,تقييم الضغط الوريدي الوداجي| JVP,JVP,رقبة| زاوية| ارتفاع| قصبي,TRUE,JVP assessment technique
+شنوا معنى الزرقة الطرفية وين نلقوها؟,الزرقة الطرفية| زرقة الأطراف,cyanosis,كفين| زرقة| دم| أكسجين,TRUE,peripheral cyanosis
+شنوا النفخة الانقباضية وعلاش تصير؟,النفخة القلبية الانقباضية| تضيق الصمام الأبهري,murmurs,انقباضية| طرد| تضيق| أبهر,TRUE,systolic murmur
+شنوا علامات التهاب الشغاف اللي نلقوها في اليدين؟,علامات التهاب الشغاف| عقد أوسلر| آفات جينواي,endocarditis,أوسلر| جينواي| نزيف| شظوي,TRUE,endocarditis peripheral signs
+شنوا يدل عليه النبض غير المنتظم بشكل غير منتظم؟,الرجفان الأذيني| اضطراب نظم القلب,atrial_fibrillation,رجفان| أذيني| غير منتظم| تخطيط,TRUE,AF diagnosis from pulse
+وين تشع النفخة متاع تضيق الأبهر؟,إشعاع نفخة تضيق الأبهر| التسمع على الرقبة,aortic_stenosis,رقبة| سباتي| إشعاع| انقباضية,TRUE,murmur radiation
+شنوا نحوسو فيه في وجه المريض وقت فحص القلب؟,علامات الوجه في أمراض القلب| شحوب الملتحمة,facial_signs,فقر دم| يرقان| قوس| قرنية,TRUE,facial examination signs
+شنوا معنى النبض سريع الانخماص؟,نبض المطرقة المائية| القلس الأبهري,collapsing_pulse,قلس| أبهر| سريع| انخماص,TRUE,collapsing pulse sign
+كيفاش نتسمع النفخة الانبساطية متاع القلس الأبهري؟,تسمع القلس الأبهري| وضعية الجلوس للأمام,aortic_regurgitation,جلوس| أمام| زفير| قصبي,TRUE,AR auscultation technique
+شنوا الأشياء اللي نحوسو فيهم في صدر المريض قبل التسمع؟,فحص البركورديوم| الندوب والتشوهات,precordium_inspection,ندوب| منظم| نبض| تشوهات,TRUE,precordium inspection
+شنوا دلالة تضخم الكبد وقت فحص القلب؟,تضخم الكبد في قصور القلب| الفحص البطني,heart_failure_signs,كبد| تضخم| قصور| وذمة,TRUE,heart failure assessment
+عندي مريض عندو ورم في ساقو شنوا نفكر فيه من ناحية القلب؟,وذمة الأطراف السفلية| قصور القلب الاحتقاني,peripheral_edema,وذمة| ساق| ضغط| قصور,TRUE,peripheral edema in heart failure
+شنوا نسألو فيه المريض قبل ما نبدا نفحصو؟,الموافقة على الفحص| تقديم الطبيب للمريض,consent_introduction,موافقة| هوية| اسم| تاريخ,TRUE,consent and introduction steps
+شنوا نلازم نطلبو من الفحوصات بعد فحص القلب؟,تخطيط القلب الكهربائي| صورة الصدر الشعاعية,investigations,ECG| شعاعية| دم| تروبونين,TRUE,post-exam investigations
