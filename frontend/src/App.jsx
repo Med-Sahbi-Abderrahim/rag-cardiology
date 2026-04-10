@@ -28,7 +28,7 @@ function App() {
       <aside className="sidebar">
         <div className="logo-area">
           <div className="logo-dot"></div>
-          <span>نبض RAG</span>
+          <span>QalbAI</span>
         </div>
 
         <PDFUpload 
