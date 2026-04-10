@@ -56,6 +56,7 @@ Twenty domain-specific questions on a cardiovascular examination PDF (`backend/e
 | Metric | Value |
 |--------|--------|
 | Retrieval success | 18 / 20 (90%) |
+| Latency | 2~4s per response |
 | Keyword match (mean) | 0.25 |
 
 Keywords in the eval set are formal Arabic; generated answers are in Darija, so keyword overlap underestimates answer quality—use it with retrieval rate, not as a standalone score.
