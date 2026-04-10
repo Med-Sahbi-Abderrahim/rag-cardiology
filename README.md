@@ -2,7 +2,11 @@
 
 **مساعد RAG في أمراض القلب بالدارجة التونسية — A Tunisian Arabic (Darija) cardiology RAG assistant.**
 
+🔗 [Live Demo](https://rag-cardiology.vercel.app) · [Backend](https://rag-cardiology.up.railway.app/health)
+
 Medical RAG chatbot: upload a cardiology PDF, ask questions in Darija; the backend retrieves from a FAISS index and answers in natural Tunisian dialect, phrased like a local cardiologist would explain.
+
+![QalbAI UI](screenshot.png)
 
 ## Architecture
 
