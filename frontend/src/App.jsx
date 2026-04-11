@@ -37,9 +37,6 @@ function App() {
         />
 
         <div className="status-panel">
-          <p className="status-label">حالة النظام:</p>
-          <div className={`ekg-line ${isIndexing ? 'active' : ''}`}></div>
-          <p className="connection-status">● متصل بـ OpenRouter</p>
           <p className={`upload-status ${currentPdfId ? 'ready' : 'waiting'}`}>
             {currentPdfId ? `● تم تحميل الملف (${currentPdfId})` : '● لم يتم تحميل PDF بعد'}
           </p>
