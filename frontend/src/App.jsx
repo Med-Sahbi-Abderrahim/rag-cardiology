@@ -38,7 +38,7 @@ function App() {
 
         <div className="status-panel">
           <p className={`upload-status ${currentPdfId ? 'ready' : 'waiting'}`}>
-            {currentPdfId ? `● تم تحميل الملف (${currentPdfId})` : '● لم يتم تحميل PDF بعد'}
+            {currentPdfId ? `● تم تحميل الملف ` : '● لم يتم تحميل PDF بعد'}
           </p>
         </div>
       </aside>
